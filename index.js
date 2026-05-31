@@ -6,7 +6,7 @@ app.use(cors());
 app.use(express.json());
 
 const TWILIO_SID = 'AC51b53427c5c26f6af08a17dfaa9ad2ed';
-const TWILIO_TOKEN = '5d29c2fc966745cd9791c35e52571d65';
+const TWILIO_TOKEN = '3e4cb4a69c756524b8419a72ec04178e';
 const TWILIO_FROM = '+12185683292';
 
 app.get('/send-otp', async (req, res) => {
