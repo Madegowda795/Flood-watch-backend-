@@ -11,8 +11,9 @@ const API_KEY = 'dEasGMt9cFUqj7rz6pTgZB5u38fnHkxleb0JhCwDyKiNQ2VSOLMbpPfIvXBh79J
 app.get('/send-otp', async (req, res) => {
   const { phone, otp } = req.query;
   try {
+    const message = encodeURIComponent('FloodWatch Alert: ' + otp);
     const response = await fetch(
-      `https://www.fast2sms.com/dev/bulkV2?authorization=${API_KEY}&route=otp&variables_values=${otp}&flash=0&numbers=${phone}`
+      'https://www.fast2sms.com/dev/bulkV2?authorization=' + API_KEY + '&route=q&message=' + message + '&language=english&flash=0&numbers=' + phone
     );
     const data = await response.json();
     res.json(data);
@@ -21,9 +22,4 @@ app.get('/send-otp', async (req, res) => {
   }
 });
 
-
 app.listen(process.env.PORT || 3000, () => console.log('Server running'));
-
-
-
-
