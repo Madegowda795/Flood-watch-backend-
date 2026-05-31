@@ -1,22 +1,34 @@
 const express = require('express');
-const fetch = require('node-fetch');
 const cors = require('cors');
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-const API_KEY = 'dEasGMt9cFUqj7rz6pTgZB5u38fnHkxleb0JhCwDyKiNQ2VSOLMbpPfIvXBh79JH3qjYlSWgZuQkyAL6';
+const TWILIO_SID = 'AC51b53427c5c26f6af08a17dfaa9ad2ed';
+const TWILIO_TOKEN = '5d29c2fc966745cd9791c35e52571d65';
+const TWILIO_FROM = '+12185683292';
 
 app.get('/send-otp', async (req, res) => {
   const { phone, otp } = req.query;
   try {
-    const message = encodeURIComponent('FloodWatch Alert: ' + otp);
-    const response = await fetch(
-      'https://www.fast2sms.com/dev/bulkV2?authorization=' + API_KEY + '&route=q&message=' + message + '&language=english&flash=0&numbers=' + phone
-    );
+    const fetch = require('node-fetch');
+    const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`;
+    const body = new URLSearchParams({
+      From: TWILIO_FROM,
+      To: '+91' + phone,
+      Body: 'FloodWatch Alert: ' + otp
+    });
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + Buffer.from(TWILIO_SID + ':' + TWILIO_TOKEN).toString('base64'),
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: body
+    });
     const data = await response.json();
-    res.json(data);
+    res.json({ return: data.sid ? true : false, message: data.message || 'sent' });
   } catch (e) {
     res.json({ return: false, message: e.message });
   }
